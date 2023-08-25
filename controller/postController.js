@@ -31,7 +31,7 @@ const CreatePost = (req, res) => {
 const getPost = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const getData = await Post.findOne({ userId });
+    const getData = await Post.find({ userId });
     if (!getData) {
       return res.status(404).json({ message: "Post not found" }); // Respond with a JSON message
     }
@@ -45,6 +45,7 @@ const getPost = async (req, res) => {
 };
 
 ///  UPDATE DATA
+
 const updatePost = async (req, res) => {
   const userId = req.user.userId;
   try {
@@ -63,7 +64,7 @@ const updatePost = async (req, res) => {
     dataToUpdate.title = req.body.title;
     dataToUpdate.description = req.body.description;
     if (req.file) {
-      dataToUpdate.attachment = req.file.path; 
+      dataToUpdate.attachment = req.file.path;
     }
     const updatedData = await dataToUpdate.save();
     res.status(200).json(updatedData);
@@ -76,7 +77,7 @@ const updatePost = async (req, res) => {
 ///  DELETE DATA
 
 const deletePost = async (req, res) => {
-  const postId = req.body.postId; 
+  const postId = req.body.postId;
   try {
     const dataToDelete = await Post.findById(postId);
     if (!dataToDelete) {
@@ -95,5 +96,4 @@ const deletePost = async (req, res) => {
   }
 };
 
-
-module.exports = { CreatePost, getPost, updatePost , deletePost };
+module.exports = { CreatePost, getPost, updatePost, deletePost };

@@ -4,8 +4,8 @@ const connectDb = require("./config/dbConnection");
 const errorHandler = require("./middleware/errorHandler");
 
 connectDb();
-
 const app = express();
+app.use(express.static(__dirname));
 
 const port = process.env.PORT || 5000;
 
@@ -17,9 +17,6 @@ app.use(errorHandler);
 
 app.use("/auth", require("./routes/authRouter"));
 app.use("/user", require("./routes/userRouter"));
-
-
-
 
 
 
