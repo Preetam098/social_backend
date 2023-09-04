@@ -26,7 +26,7 @@ const CreatePost = (req, res) => {
     });
 };
 
-///   GET USER DATA
+///   GET Post DATA
 
 const getPost = async (req, res) => {
   try {
@@ -44,7 +44,7 @@ const getPost = async (req, res) => {
   }
 };
 
-///  UPDATE DATA
+///  UPDATE Post
 
 const updatePost = async (req, res) => {
   const userId = req.user.userId;
@@ -74,17 +74,20 @@ const updatePost = async (req, res) => {
   }
 };
 
-///  DELETE DATA
+///  DELETE Post
 
 const deletePost = async (req, res) => {
-  const postId = req.body.postId;
+  const postId = req.params.postid;
+  console.log(postId)
   try {
     const dataToDelete = await Post.findById(postId);
     if (!dataToDelete) {
       return res.status(404).json({ error: "Data not founde" });
     }
     if (dataToDelete.userId.toString() !== req.user.userId) {
-      return res.status(403).json({
+      return res.status(403)
+      
+      .json({
         error: "User doesn't have permission to delete other user's data",
       });
     }
