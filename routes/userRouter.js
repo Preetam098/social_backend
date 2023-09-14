@@ -15,7 +15,7 @@ router.route("/profile").get(validateToken, profile);
 
 router.route("/post").post(validateToken,Upload.single('file'),CreatePost);
 router.route("/post").get(validateToken,getPost);
-router.route("/post").put(validateToken,Upload.single('file'),updatePost);
+router.route("/post/:postid").put(validateToken,Upload.single('file'),updatePost);
 router.route("/post/:postid").delete(validateToken,deletePost);
 
 
