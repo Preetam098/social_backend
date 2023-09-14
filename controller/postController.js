@@ -16,7 +16,9 @@ const CreatePost = (req, res) => {
   newPost
     .save()
     .then((post) => {
-      res.status(201).json(post);
+      res
+        .status(201)
+        .json({ success: true, message: "Update successful", data: post });
     })
     .catch((error) => {
       console.error("Error adding post:", error);
@@ -48,12 +50,13 @@ const getPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
   const userId = req.user.userId;
+  const postId = req.params.postid;
   try {
-    const dataToUpdate = await Post.findOne({ userId: userId });
+    const dataToUpdate = await Post.findById(postId);
     if (!dataToUpdate) {
       return res.status(404).json({ error: "Data not found" });
     }
-    if (req.file.path) {
+    if (req.file && req.file.path) {
       fileToDeletePath(dataToUpdate.attachment);
     }
     if (dataToUpdate.userId.toString() !== userId) {
@@ -67,7 +70,9 @@ const updatePost = async (req, res) => {
       dataToUpdate.attachment = req.file.path;
     }
     const updatedData = await dataToUpdate.save();
-    res.status(200).json(updatedData);
+    res
+      .status(200)
+      .json({ success: true, message: "Update successful", data: updatedData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -78,24 +83,17 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   const postId = req.params.postid;
-  console.log(postId)
+  console.log("postId" ,postId);
   try {
-    const dataToDelete = await Post.findById(postId);
+    const dataToDelete = await Post.findByIdAndDelete(postId);
+
     if (!dataToDelete) {
-      return res.status(404).json({ error: "Data not founde" });
+      return res.status(404).json({ error: "Data not found" });
     }
-    if (dataToDelete.userId.toString() !== req.user.userId) {
-      return res.status(403)
-      
-      .json({
-        error: "User doesn't have permission to delete other user's data",
-      });
-    }
-    await dataToDelete.deleteOne();
-    res.status(200).json(dataToDelete);
+    res.status(200).json({ success: true, message: "Delete successful" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).json({ message: "Bad Request" });
   }
 };
 
